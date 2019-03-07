@@ -1,25 +1,25 @@
 sudo: required
 services:
   - docker
-
+#先build一个client的image，
 before_install:
-  - docker build -t stephengrider/react-test -f ./client/Dockerfile.dev ./client
-
+  - docker build -t harrykjg/react-test -f ./client/Dockerfile.dev ./client
+#再用上面这个image去run一些test
 script:
-  - docker run stephengrider/react-test npm test -- --coverage
-
+  - docker run harrykjg/react-test npm test -- --coverage
+#build image然后push到hub
 after_success:
-  - docker build -t stephengrider/multi-client ./client
-  - docker build -t stephengrider/multi-nginx ./nginx
-  - docker build -t stephengrider/multi-server ./server
-  - docker build -t stephengrider/multi-worker ./worker
-  # Log in to the docker CLI
+  - docker build -t harrykjg/multi-client ./client
+  - docker build -t harrykjg/multi-nginx ./nginx
+  - docker build -t harrykjg/multi-server ./server
+  - docker build -t harrykjg/multi-worker ./worker
+  # Log in to the docker CLI，--password-stdin代表他将会在stdin收到password
   - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_ID" --password-stdin
   # Take those images and push them to docker hub
-  - docker push stephengrider/multi-client
-  - docker push stephengrider/multi-nginx
-  - docker push stephengrider/multi-server
-  - docker push stephengrider/multi-worker
+  - docker push harrykjg/multi-client
+  - docker push harrykjg/multi-nginx
+  - docker push harrykjg/multi-server
+  - docker push harrykjg/multi-worker
 
 deploy:
   provider: elasticbeanstalk
