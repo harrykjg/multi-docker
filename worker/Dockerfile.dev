@@ -1,0 +1,7 @@
+FROM node:alpine
+WORKDIR "/app"
+COPY ./package.json ./
+RUN npm install
+COPY . .
+#这个dev是对应package。json里的script里定义的command的
+CMD ["npm", "run", "dev"] 
